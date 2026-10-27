@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#20261f">
+<title>AV Portfolio Werkruimte</title>
+<style>
+:root{
+ --bg:#f4f4f0;--surface:#fff;--surface2:#f8f9f6;--ink:#222720;--muted:#687067;
+ --line:#dfe3dc;--accent:#536e3e;--accent-dark:#354a29;--accent-soft:#edf2e8;
+ --warn:#895b18;--warn-bg:#fbf5e8;--danger:#9c3939;--shadow:0 10px 30px rgba(31,39,28,.055);
+ --radius:16px
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+a{color:var(--accent-dark)}
+.topbar{background:#20261f;color:#fff;border-bottom:4px solid #81996d;padding:20px clamp(18px,4vw,54px);display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:13px;min-width:0}
+.brandmark{width:44px;height:44px;border:1px solid #64725e;border-radius:12px;display:grid;place-items:center;font-size:13px;font-weight:850;letter-spacing:.08em;color:#dce8d1;flex-shrink:0}
+.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:10px;color:#bac9b0;font-weight:800}
+.topbar h1{font-size:20px;margin:2px 0 0;font-weight:700;letter-spacing:-.02em}
+.top-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.save-status{font-size:12px;color:#c7d0c2;display:flex;align-items:center;gap:7px}
+.save-dot{width:7px;height:7px;border-radius:50%;background:#9fc187}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 14px;border-radius:10px;font-weight:700;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:background .15s,border-color .15s,transform .15s;text-decoration:none}
+.btn:hover{background:#f7f8f5;border-color:#bdc6b8}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:white}
+.btn.primary:hover{background:var(--accent-dark)}
+.btn.ghostdark{background:#30392e;border-color:#53604f;color:white}
+.btn.danger{color:var(--danger)}
+.btn.small{padding:7px 10px;font-size:12px}
+.shell{max-width:1500px;margin:0 auto;padding:28px clamp(14px,2.6vw,38px) 50px}
+.welcome{display:flex;justify-content:space-between;gap:28px;align-items:flex-end;margin-bottom:22px}
+.welcome h2{font-size:clamp(25px,3vw,34px);letter-spacing:-.04em;line-height:1.15;margin:5px 0 8px}
+.welcome p{max-width:780px;color:var(--muted);margin:0}
+.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:var(--accent);font-weight:850}
+.global-progress{min-width:190px;width:220px;border:1px solid var(--line);background:var(--surface);padding:13px 15px;border-radius:14px;box-shadow:var(--shadow)}
+.progress-line{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;font-weight:750}
+.progressbar{height:7px;background:#e8ebe5;border-radius:99px;overflow:hidden;margin-top:10px}
+.progressbar span{display:block;width:0;height:100%;background:var(--accent);border-radius:99px;transition:width .25s}
+.layout{display:grid;grid-template-columns:265px minmax(0,1fr);gap:22px;align-items:start}
+.sidebar{position:sticky;top:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);max-height:calc(100vh - 28px);overflow:auto}
+.side-label{font-size:10px;text-transform:uppercase;letter-spacing:.13em;font-weight:850;color:var(--muted);margin:5px 9px 9px}
+.nav{display:grid;gap:4px}
+.nav button{display:grid;grid-template-columns:32px 1fr 24px;gap:8px;align-items:center;width:100%;text-align:left;background:transparent;color:#3a4238;border:1px solid transparent;border-radius:10px;padding:9px 8px;font-size:12px;line-height:1.25}
+.nav button:hover{background:#f6f7f3}
+.nav button.active{background:var(--accent-soft);border-color:#dce6d4;color:var(--accent-dark);font-weight:800}
+.nav-num{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:#f0f2ed;color:#687367;font-size:11px;font-weight:850}
+.nav button.active .nav-num{background:var(--accent);color:#fff}
+.nav-name{font-weight:650}
+.nav-status{font-size:10px;text-align:right;color:#8b9388}
+.nav-status.done{color:var(--accent);font-weight:900}
+.side-divider{height:1px;background:var(--line);margin:12px 2px}
+.side-tip{font-size:11px;color:var(--muted);padding:5px 8px 3px}
+.main{min-width:0}
+.content-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.section{display:none}
+.section.active{display:block;animation:fadein .16s ease-out}
+@keyframes fadein{from{opacity:.55;transform:translateY(3px)}to{opacity:1;transform:none}}
+.section-head{padding:28px 32px 23px;border-bottom:1px solid var(--line);background:linear-gradient(110deg,#fff 0%,#fcfdfb 76%,#f4f7f0 100%)}
+.head-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.code-pill,.soft-pill{display:inline-flex;border-radius:99px;padding:5px 9px;font-size:11px;font-weight:800}
+.code-pill{background:#eaf0e4;color:var(--accent-dark)}
+.soft-pill{background:#f0f1ee;color:#61695f}
+.section-head h2{font-size:clamp(23px,2.4vw,30px);letter-spacing:-.035em;line-height:1.2;margin:13px 0 8px}
+.section-head p{margin:0;max-width:850px;color:var(--muted)}
+.section-body{padding:24px 32px 30px}
+.section-body .introbox{background:#f7f8f5;border:1px solid var(--line);padding:13px 15px;border-radius:11px;margin:0 0 22px;color:#515b4d;font-size:13px}
+.group{padding:0 0 22px;margin:0 0 24px;border-bottom:1px solid #e9ece6}
+.group:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0}
+.group-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:15px}
+.group-step{background:#f0f2ec;border-radius:9px;min-width:31px;height:31px;display:grid;place-items:center;color:var(--accent);font-size:11px;font-weight:900}
+.group h3{font-size:16px;margin:2px 0 3px;letter-spacing:-.01em}
+.group-description{color:var(--muted);font-size:12px;margin:0}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px 18px}
+.field{min-width:0}
+.field.full{grid-column:1/-1}
+.field label{display:block;margin-bottom:6px;font-size:13px;font-weight:750;color:#30372e}
+.field .hint{display:block;font-size:11px;line-height:1.45;color:var(--muted);font-weight:450;margin-top:2px}
+input[type=text],input[type=date],input[type=url],input[type=number],input[type=email],textarea,select{width:100%;border:1px solid #d5dbd2;background:#fff;border-radius:9px;padding:11px 12px;color:var(--ink);outline:none;transition:border .15s,box-shadow .15s;font-size:13px}
+textarea{min-height:112px;resize:vertical;line-height:1.5}
+textarea.compact{min-height:74px}
+textarea.tall{min-height:148px}
+input:focus,textarea:focus,select:focus{border-color:#8ca67a;box-shadow:0 0 0 3px #edf3e8}
+input::placeholder,textarea::placeholder{color:#a0a69d}
+.checklist{display:grid;gap:9px}
+.checkitem{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:12px}
+.checkitem input{margin-top:4px;accent-color:var(--accent);flex-shrink:0}
+.callout{margin:15px 0 0;border:1px solid #dde7d5;background:#f5f8f1;color:#485640;padding:13px 15px;border-radius:11px;font-size:12px}
+.callout strong{color:#2f4925}
+.callout.warning{border-color:#efe0bb;background:var(--warn-bg);color:#775520}
+.evidence-box{border:1px solid var(--line);border-radius:12px;padding:15px;margin-top:12px;background:#fcfdfb}
+.evidence-heading{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+.evidence-heading strong{font-size:13px}
+.evidence-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 38px;gap:9px;padding:10px 0;border-top:1px solid #ebeee9}
+.evidence-row:first-child{border-top:0}
+.evidence-row .proof{grid-column:1/3}
+.evidence-row button{align-self:start;border:1px solid #f0dada;color:var(--danger);background:#fff8f8;border-radius:8px;height:37px;font-size:17px}
+.feedback-accordion{border:1px solid var(--line);border-radius:11px;margin:12px 0;background:#fcfdfb;overflow:hidden}.feedback-accordion summary{cursor:pointer;padding:13px 15px;font-size:13px;font-weight:800;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px}.feedback-accordion summary::-webkit-details-marker{display:none}.feedback-accordion summary:after{content:'+';font-size:18px;color:var(--accent)}.feedback-accordion[open] summary:after{content:'−'}.feedback-content{padding:0 15px 15px}.feedback-content .fields{margin-top:8px}.check-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.summary-chip{border:1px solid var(--line);border-radius:11px;padding:13px;background:#fff}
+.summary-chip strong{font-size:22px;display:block;letter-spacing:-.04em}
+.summary-chip span{font-size:11px;color:var(--muted)}
+.actions{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 22px;background:#fafbf9;border-top:1px solid var(--line);flex-wrap:wrap}
+.actions-center{display:flex;align-items:center;gap:9px}
+.page-indicator{font-size:11px;color:var(--muted);font-weight:700;min-width:125px;text-align:center}
+.inline-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.file-input{background:#f8faf6;padding:14px;border:1px dashed #c7d1c0;border-radius:10px}
+.file-input input{font-size:12px}
+.note-small{font-size:11px;color:var(--muted);margin:6px 0 0}
+.export-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}
+.export-card{border:1px solid var(--line);border-radius:13px;padding:17px;background:#fff}
+.export-card h3{font-size:14px;margin:0 0 5px}
+.export-card p{font-size:12px;color:var(--muted);margin:0 0 14px}
+footer.app-footer{text-align:center;color:#7c8479;font-size:11px;padding:22px}
+.toast{position:fixed;right:20px;bottom:20px;background:#20261f;color:white;padding:12px 16px;border-radius:10px;box-shadow:var(--shadow);font-size:12px;opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s;z-index:99}
+.toast.show{opacity:1;transform:translateY(0)}
+.mobile-nav-select{display:none}
+@media(max-width:1000px){.layout{grid-template-columns:220px minmax(0,1fr)}.section-head{padding:24px}.section-body{padding:22px 24px}.topbar{padding-left:20px;padding-right:20px}}
+@media(max-width:760px){.topbar{align-items:flex-start}.save-status{display:none}.top-actions .btn{padding:8px 10px;font-size:12px}.welcome{display:block}.global-progress{margin-top:15px;width:100%}.layout{grid-template-columns:1fr}.sidebar{position:static;max-height:none;padding:12px}.sidebar .side-label{margin-top:0}.nav{grid-template-columns:repeat(2,minmax(0,1fr))}.nav button{grid-template-columns:27px 1fr 17px}.nav-num{width:25px;height:25px}.side-tip{display:none}.section-head{padding:21px 18px}.section-body{padding:19px 18px}.fields{grid-template-columns:1fr;gap:14px}.field.full{grid-column:auto}.evidence-row{grid-template-columns:minmax(0,1fr) 34px}.evidence-row .proof{grid-column:1}.evidence-row button{grid-column:2;grid-row:1}.check-summary{grid-template-columns:1fr 1fr}.export-grid{grid-template-columns:1fr}.actions{padding:13px 14px}.page-indicator{min-width:0}.actions-center{order:3;width:100%;justify-content:center}.actions .btn{flex:1}}
+@media print{body{background:white}.topbar,.welcome,.sidebar,.actions,.app-footer,.no-print{display:none!important}.shell{padding:0}.layout{display:block}.content-card{border:0;box-shadow:none}.section{display:block!important;page-break-after:always}.section:last-child{page-break-after:auto}.section-head{padding:18px 0;background:white}.section-body{padding:18px 0}.field{break-inside:avoid}textarea,input,select{border:0;border-bottom:1px solid #aaa;border-radius:0;padding:4px 0;box-shadow:none;resize:none}.callout{break-inside:avoid}.evidence-row button{display:none}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="brandmark">AV</div>
+    <div><div class="eyebrow">Portfolio-examen · MBO 4</div><h1>AV Portfolio Werkruimte</h1></div>
+  </div>
+  <div class="top-actions">
+    <div class="save-status"><span class="save-dot"></span><span id="saveStatus">Lokaal opgeslagen</span></div>
+    <button class="btn ghostdark" id="quickSave" type="button">↓ Bewaar export</button>
+  </div>
+</header>
+<div class="shell">
+  <div class="welcome">
+    <div><div class="kicker">Jouw portfolio, stap voor stap</div><h2>Alle werkprocessen op één plek.</h2><p>Vul eerst de concrete situatie in en werk daarna per hoofdstuk de vragen uit. De vragen volgen de examenhandleiding; STARR helpt je om jouw eigen bijdrage duidelijk te beschrijven.</p></div>
+    <div class="global-progress"><div class="progress-line"><span>Totale voortgang</span><strong id="globalPct">0%</strong></div><div class="progressbar"><span id="globalBar"></span></div><div class="note-small" id="globalDetails">Nog niet begonnen</div></div>
+  </div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="side-label">Portfolio-onderdelen</div>
+      <nav class="nav" id="nav">
+        <button class="active" data-page="0"><span class="nav-num">0</span><span class="nav-name">Startgegevens</span><span class="nav-status">—</span></button>
+        <button data-page="1"><span class="nav-num">1</span><span class="nav-name">Voorbereiden opnames</span><span class="nav-status">○</span></button>
+        <button data-page="2"><span class="nav-num">2</span><span class="nav-name">Productie opleveren</span><span class="nav-status">○</span></button>
+        <button data-page="3"><span class="nav-num">3</span><span class="nav-name">Samenwerken</span><span class="nav-status">○</span></button>
+        <button data-page="4"><span class="nav-num">4</span><span class="nav-name">Persoonlijk AV-portfolio</span><span class="nav-status">○</span></button>
+        <button data-page="5"><span class="nav-num">5</span><span class="nav-name">AV-netwerk</span><span class="nav-status">○</span></button>
+        <button data-page="6"><span class="nav-num">6</span><span class="nav-name">Doelgroep & strategie</span><span class="nav-status">○</span></button>
+        <button data-page="7"><span class="nav-num">7</span><span class="nav-name">AV-concept</span><span class="nav-status">○</span></button>
+        <button data-page="8"><span class="nav-num">✓</span><span class="nav-name">Bewijs & controle</span><span class="nav-status">○</span></button>
+        <button data-page="9"><span class="nav-num">↓</span><span class="nav-name">Exporteren</span><span class="nav-status"> </span></button>
+      </nav>
+      <div class="side-divider"></div>
+      <div class="side-tip">Tip: je hoeft niet alles in één keer af te maken. Je voortgang blijft bewaard in deze browser; download regelmatig een back-up.</div>
+    </aside>
+    <main class="main">
+      <form id="portfolioForm" autocomplete="on">
+      <div class="content-card">
+      <!-- start -->
+      <section class="section active" data-title="Startgegevens" data-short="Start">
+        <div class="section-head"><div class="head-meta"><span class="code-pill">START</span><span class="soft-pill">Algemene gegevens</span></div><h2>Begin met de basisgegevens</h2><p>Vul je gegevens één keer in. Elk hoofdstuk heeft daarnaast eigen projectgegevens, omdat de zeven bewijzen niet per se uit dezelfde opdracht hoeven te komen.</p></div>
+        <div class="section-body">
+          <div class="group"><div class="group-head"><span class="group-step">01</span><div><h3>Student en opleiding</h3><p class="group-description">Deze gegevens worden gebruikt bij de export en het uiteindelijke portfolio.</p></div></div>
+            <div class="fields">
+              <div class="field"><label for="studentName">Naam student</label><input id="studentName" name="studentName" type="text" placeholder="Voor- en achternaam"></div>
+              <div class="field"><label for="studentNumber">Studentnummer <span class="hint">Alleen invullen als dit voor je portfolio nodig is.</span></label><input id="studentNumber" name="studentNumber" type="text" placeholder="Studentnummer"></div>
+              <div class="field"><label for="school">School</label><input id="school" name="school" type="text" placeholder="Naam school"></div>
+              <div class="field"><label for="classGroup">Opleiding / klas / leerjaar</label><input id="classGroup" name="classGroup" type="text" placeholder="AV Specialist, klas…"></div>
+              <div class="field"><label for="internshipCompany">Stagebedrijf / organisatie</label><input id="internshipCompany" name="internshipCompany" type="text" placeholder="Indien van toepassing"></div>
+              <div class="field"><label for="portfolioDate">Datum laatste update</label><input id="portfolioDate" name="portfolioDate" type="date"></div>
+            </div>
+          </div>
+          <div class="group"><div class="group-head"><span class="group-step">02</span><div><h3>Algemene portfolio-informatie</h3><p class="group-description">Handig voor de uiteindelijke samenvoeging en controle.</p></div></div>
+            <div class="fields">
+              <div class="field full"><label for="portfolioGoal">Welke richting binnen AV spreekt je aan? <span class="hint">Bijvoorbeeld corporate, events, documentaire, commercials, montage of een andere richting.</span></label><textarea id="portfolioGoal" name="portfolioGoal" class="compact" placeholder="Vul je eigen voorkeur in."></textarea></div>
+              <div class="field full"><label for="portfolioNotes">Algemene notities / afspraken met docent</label><textarea id="portfolioNotes" name="portfolioNotes" class="compact" placeholder="Bijvoorbeeld welke projecten je nog gaat toevoegen of welke afspraken je hebt gemaakt."></textarea></div>
+            </div>
+          </div>
+          <div class="callout warning"><strong>Let op de exameneisen:</strong> de handleiding vraagt om bewijs voor alle zeven werkprocessen, bewijs uit minimaal vier verschillende opdrachten en authentieke bewijzen die jouw eigen bijdrage aantonen. Stagebewijzen kunnen een VAB-verklaring nodig hebben. Volg bij twijfel de aanwijzingen van je docent.</div>
+          <div class="group"><div class="group-head"><span class="group-step">03</span><div><h3>Werkwijze</h3><p class="group-description">Praktische stappen.</p></div></div><div class="checklist">
+            <label class="checkitem"><input type="checkbox" name="guide_read">Ik heb de examenhandleiding en opdrachten doorgenomen.</label>
+            <label class="checkitem"><input type="checkbox" name="guide_projects">Ik houd bij uit welke verschillende projecten mijn bewijsstukken komen.</label>
+            <label class="checkitem"><input type="checkbox" name="guide_authentic">Ik beschrijf alleen ervaringen die ik echt zelf heb meegemaakt en kan onderbouwen.</label>
+          </div></div>
+        </div>
+      </section>
+      <!-- chapter 1 -->
+      <section class="section" data-title="Hoofdstuk 1 — Voorbereiden" data-short="Voorbereiden">
+        <div class="section-head"><div class="head-meta"><span class="code-pill">B1-K1-W1</span><span class="soft-pill">Hoofdstuk 1</span><span class="soft-pill">STARR</span></div><h2>Bereidt de opnames voor de AV-productie voor</h2><p>Laat zien hoe je op basis van de opdracht en het AV-concept de locatie, mensen, apparatuur, planning en veiligheid voorbereidt. Beschrijf steeds jouw eigen rol en keuzes.</p></div>
+        <div class="section-body">
+          <div class="introbox">Vul dit hoofdstuk in aan de hand van één concrete productie. Voeg bewijsstukken als aparte bestanden toe en verwijs hieronder naar de bestandsnaam.</div>
+          <div class="group"><div class="group-head"><span class="group-step">01</span><div><h3>Projectgegevens</h3><p class="group-description">Maak het duidelijk om welke productie het gaat.</p></div></div><div class="fields">
+            <div class="field"><label>Naam van project / productie</label><input name="h1Project" type="text" placeholder="Titel of korte omschrijving"></div><div class="field"><label>Opdrachtgever / organisatie</label><input name="h1Client" type="text"></div>
+            <div class="field"><label>Opnamedatum</label><input name="h1Date" type="date"></div><div class="field"><label>Locatie(s)</label><input name="h1Location" type="text"></div>
+            <div class="field full"><label>Korte omschrijving van het AV-concept en de gewenste productie</label><textarea name="h1Brief" placeholder="Wat moest er worden gemaakt, met welk doel en welke eisen waren vooraf bekend?"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">S</span><div><h3>Situatie</h3><p class="group-description">De context van de opdracht.</p></div></div><div class="fields">
+            <div class="field full"><label>Wat voor productie was het en waarom werd deze gemaakt?</label><textarea name="h1Situation" placeholder="Beschrijf de opdracht, context en het doel."></textarea></div>
+            <div class="field"><label>Wie waren er betrokken en wat waren hun functies?</label><textarea name="h1People" class="compact" placeholder="Opdrachtgever, crew, talent, locatiecontact…"></textarea></div>
+            <div class="field"><label>Welke tijdsplanning, locatievoorwaarden of andere omstandigheden speelden mee?</label><textarea name="h1Conditions" class="compact"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">T</span><div><h3>Taak</h3><p class="group-description">Jouw rol en verantwoordelijkheden.</p></div></div><div class="fields">
+            <div class="field"><label>Wat was jouw rol bij de voorbereiding?</label><textarea name="h1TaskRole" placeholder="Wat was specifiek jouw opdracht?"></textarea></div>
+            <div class="field"><label>Waar was jij persoonlijk verantwoordelijk voor?</label><textarea name="h1TaskResponsibility" placeholder="Onderscheid jouw werk van dat van anderen."></textarea></div>
+            <div class="field full"><label>Welke eisen, afspraken of deadlines moest je volgen?</label><textarea name="h1TaskRequirements" class="compact"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">A</span><div><h3>Actie — locatieonderzoek</h3><p class="group-description">Onderzoek en beschrijf de locatie zoals die voor de opname relevant is.</p></div></div><div class="fields">
+            <div class="field"><label>Locatiegegevens en contactpersoon</label><textarea name="h1LocationData" placeholder="Adres, contactpersoon en functie, contactmoment, toestemming of toegangsafspraken."></textarea></div>
+            <div class="field"><label>Bereikbaarheid en logistiek</label><textarea name="h1Access" placeholder="Auto, parkeren, laden/lossen, openbaar vervoer, toegang en looproutes."></textarea></div>
+            <div class="field"><label>Licht op locatie</label><textarea name="h1Light" placeholder="Natuurlijk/aanwezig licht, richting, kleur, veranderingen, beperkingen en extra licht dat nodig is."></textarea></div>
+            <div class="field"><label>Akoestiek en geluid</label><textarea name="h1Acoustics" placeholder="Galm, echo, omgevingsgeluid, storende bronnen en oplossingen."></textarea></div>
+            <div class="field"><label>Omstandigheden en technische voorzieningen</label><textarea name="h1Facilities" placeholder="Stroompunten, beschikbare ruimte, internet/verbinding, weersomstandigheden, drukte, benodigde voorzieningen."></textarea></div>
+            <div class="field"><label>Veiligheidsvoorschriften en maatregelen</label><textarea name="h1Safety" placeholder="Kabels, statieven, elektrische aansluitingen, nooduitgangen, publiek/verkeer en maatregelen."></textarea></div>
+            <div class="field full"><label>Plattegrond / schets en posities <span class="hint">Beschrijf wat je op de bijgevoegde plattegrond markeert.</span></label><textarea name="h1Map" placeholder="Stroompunten, camera-posities, modellen/acteurs/interviewpersonen, licht, geluid en veilige looproutes. Vermeld de bestandsnaam van de plattegrond."></textarea></div>
+            <div class="field full"><label>Foto’s van de locatie <span class="hint">Beschrijf wat zichtbaar is en waarom de foto’s relevant zijn.</span></label><textarea name="h1Photos" class="compact" placeholder="Bijv. H1_locatie_01.jpg — laat de beschikbare ruimte en lichtinval zien."></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">A</span><div><h3>Actie — organisatie en techniek</h3><p class="group-description">Laat zien dat mensen, middelen en planning op elkaar zijn afgestemd.</p></div></div><div class="fields">
+            <div class="field full"><label>Apparatuurlijst camera, licht en geluid</label><textarea name="h1Equipment" class="tall" placeholder="Per item: apparaat, aantal, waarvoor gebruikt, reden van keuze, controle/accu’s/kaarten en reserve-oplossing."></textarea></div>
+            <div class="field full"><label>Call sheet / draaiplanning</label><textarea name="h1CallSheet" class="tall" placeholder="Tijd, activiteit/scène, locatie, aankomsttijden, aanwezige personen en contactgegevens, verantwoordelijkheden en bijzonderheden. Je mag een aparte call sheet toevoegen en hiernaar verwijzen."></textarea></div>
+            <div class="field"><label>Overleg en afspraken</label><textarea name="h1Communication" placeholder="Met wie stemde je wat af? Hoe bevestigde je afspraken?"></textarea></div>
+            <div class="field"><label>Probleem of beperking en jouw oplossing</label><textarea name="h1Problem" placeholder="Beschrijf een echt voorbeeld uit deze productie."></textarea></div>
+            <div class="field full"><label>Hoe koos je de middelen en mensen op basis van de wensen van de opdrachtgever?</label><textarea name="h1Choices"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">R</span><div><h3>Resultaat</h3><p class="group-description">Wat leverde jouw voorbereiding op?</p></div></div><div class="fields">
+            <div class="field"><label>Hoe verliep de opname dankzij jouw voorbereiding?</label><textarea name="h1Result"></textarea></div><div class="field"><label>Welke concrete uitkomst of feedback was er?</label><textarea name="h1Feedback"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">R</span><div><h3>Reflectie</h3><p class="group-description">Wat heb je geleerd en wat zou je anders doen?</p></div></div><div class="fields">
+            <div class="field"><label>Wat ging goed in voorbereiden, plannen en organiseren?</label><textarea name="h1ReflectionGood"></textarea></div><div class="field"><label>Wat kon beter en hoe pak je dat een volgende keer aan?</label><textarea name="h1ReflectionImprove"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">+</span><div><h3>Bewijsstukken</h3><p class="group-description">Registreer de bijlagen die jouw verhaal aantonen.</p></div></div><div class="evidence-box" data-evidence-group="h1"><div class="evidence-heading"><strong>Bijlagen hoofdstuk 1</strong><button class="btn small add-evidence" type="button">+ Bewijs toevoegen</button></div><div class="evidence-list"></div><p class="note-small">Aanbevolen: locatieonderzoek, locatiefoto’s, plattegrond, call sheet en apparatuurlijst.</p></div></div>
+        </div>
+      </section>
+      <!-- chapter 2 -->
+      <section class="section" data-title="Hoofdstuk 2 — Opleveren" data-short="Opleveren">
+        <div class="section-head"><div class="head-meta"><span class="code-pill">B1-K1-W4</span><span class="soft-pill">Hoofdstuk 2</span><span class="soft-pill">STARR</span></div><h2>Levert de AV-(deel)productie op</h2><p>Laat zien hoe je de wensen en technische eisen hebt vertaald naar een correcte levering, bestanden hebt gecontroleerd en relevante zaken hebt gearchiveerd.</p></div>
+        <div class="section-body">
+          <div class="introbox">Neem één concrete levering als voorbeeld. Verwijs waar mogelijk naar de briefing, exports, feedback en communicatie met de opdrachtgever.</div>
+          <div class="group"><div class="group-head"><span class="group-step">01</span><div><h3>Projectgegevens</h3><p class="group-description">Welke productie leverde je op?</p></div></div><div class="fields">
+            <div class="field"><label>Project / productie</label><input name="h2Project" type="text"></div><div class="field"><label>Opdrachtgever</label><input name="h2Client" type="text"></div>
+            <div class="field"><label>Datum / levermoment</label><input name="h2Date" type="date"></div><div class="field"><label>Platform(s)</label><input name="h2Platforms" type="text" placeholder="Bijv. YouTube, Instagram, website"></div>
+            <div class="field full"><label>Omschrijving en jouw rol in de postproductie</label><textarea name="h2Overview" placeholder="Wat moest worden geleverd, wat heb jij gemonteerd/geëxporteerd/gecontroleerd en wie deed de rest?"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">S</span><div><h3>Situatie</h3><p class="group-description">De aanleiding, wensen en context van de levering.</p></div></div><div class="fields">
+            <div class="field"><label>Wat waren de wensen en verwachtingen van de opdrachtgever?</label><textarea name="h2SituationWishes"></textarea></div>
+            <div class="field"><label>Waar en hoe zou het materiaal worden gepubliceerd/gebruikt?</label><textarea name="h2SituationPlatform"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">T</span><div><h3>Taak</h3><p class="group-description">Jouw verantwoordelijkheid bij de oplevering.</p></div></div><div class="fields">
+            <div class="field"><label>Welke bestanden of versies moest jij opleveren?</label><textarea name="h2TaskFiles"></textarea></div><div class="field"><label>Welke kwaliteitseisen, deadline en afspraken golden?</label><textarea name="h2TaskRequirements"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">A</span><div><h3>Actie — eisen, export en kwaliteit</h3><p class="group-description">Leg de technische keuzes en controles concreet uit.</p></div></div><div class="fields">
+            <div class="field full"><label>Technische aanleverspecificaties per platform <span class="hint">Denk aan lengte, resolutie, aspect ratio, formaat/codec, framerate, audio en bestandsgrootte.</span></label><textarea name="h2Specs" class="tall"></textarea></div>
+            <div class="field full"><label>Bestanden en codecs die je hebt aangeleverd, met reden van keuze</label><textarea name="h2Codecs" class="tall" placeholder="Bijv. masterbestand en versie voor social media. Leg uit waarom elk formaat/codec geschikt was."></textarea></div>
+            <div class="field"><label>Welke software en exportinstellingen heb je gebruikt?</label><textarea name="h2Software"></textarea></div><div class="field"><label>Welke kwaliteitscontroles heb je uitgevoerd?</label><textarea name="h2QC" placeholder="Beeld, geluid, titels, sync, kleur, pieken, begin/einde, bestand afspelen…"></textarea></div>
+            <div class="field"><label>Opslag, back-up en archivering</label><textarea name="h2Archive" placeholder="Mappenstructuur, naamgeving, locaties van masters/projectbestanden en back-ups."></textarea></div>
+            <div class="field"><label>Hoe heb je gecontroleerd of de levering volledig en bruikbaar was?</label><textarea name="h2DeliveryCheck"></textarea></div>
+            <div class="field"><label>Communicatie en feedback na de eerste montage</label><textarea name="h2Communication"></textarea></div>
+            <div class="field"><label>Hoe heb je feedback of wijzigingen verwerkt?</label><textarea name="h2Revisions"></textarea></div>
+            <div class="field full"><label>Auteursrecht, beeld-/portretrecht, muziek- en geluidsrechten <span class="hint">Beschrijf wat van toepassing was, welke toestemmingen/licenties je controleerde en waar bewijs staat.</span></label><textarea name="h2Rights"></textarea></div>
+            <div class="field full"><label>Onderbouwing van je belangrijkste keuzes</label><textarea name="h2Choices"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">R</span><div><h3>Resultaat</h3><p class="group-description">Wat is opgeleverd en hoe werd dat ontvangen?</p></div></div><div class="fields">
+            <div class="field"><label>Wat heb je precies opgeleverd en waar is het resultaat terug te vinden?</label><textarea name="h2Result"></textarea></div><div class="field"><label>Wat was de reactie/tevredenheid van de opdrachtgever?</label><textarea name="h2ClientFeedback"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">R</span><div><h3>Reflectie</h3><p class="group-description">Wat heb je geleerd over opleveren en kwaliteitsbewaking?</p></div></div><div class="fields">
+            <div class="field"><label>Wat ging goed?</label><textarea name="h2ReflectionGood"></textarea></div><div class="field"><label>Wat zou je volgende keer verbeteren?</label><textarea name="h2ReflectionImprove"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">+</span><div><h3>Bewijsstukken</h3><p class="group-description">Bewaar exports en relevante klantcommunicatie als losse bijlagen.</p></div></div><div class="evidence-box" data-evidence-group="h2"><div class="evidence-heading"><strong>Bijlagen hoofdstuk 2</strong><button class="btn small add-evidence" type="button">+ Bewijs toevoegen</button></div><div class="evidence-list"></div><p class="note-small">Aanbevolen: briefing/wensen, platform-specificaties, verschillende exports, feedback, rechtenbewijzen en archiveringsstructuur.</p></div></div>
+        </div>
+      </section>
+      <!-- chapter 3 -->
+      <section class="section" data-title="Hoofdstuk 3 — Samenwerken" data-short="Samenwerken">
+        <div class="section-head"><div class="head-meta"><span class="code-pill">B1-K1-W5</span><span class="soft-pill">Hoofdstuk 3</span><span class="soft-pill">STARR</span></div><h2>Werkt samen ten behoeve van de AV-productie</h2><p>Laat zien hoe je samenwerkt met betrokkenen voor en achter de camera, keuzes afstemt, onverwachte situaties bespreekt en afspraken nakomt.</p></div>
+        <div class="section-body">
+          <div class="introbox">Verplicht volgens de handleiding: vraag feedback aan minimaal twee professionals/collega’s tijdens je stage via het feedbackformulier samenwerken. Een studiegenoot of andere student/stagiair is hiervoor niet toegestaan. Reflecteer op de feedback.</div>
+          <div class="group"><div class="group-head"><span class="group-step">01</span><div><h3>Projectgegevens</h3></div></div><div class="fields">
+            <div class="field"><label>Project / productie</label><input name="h3Project" type="text"></div><div class="field"><label>Opdrachtgever / organisatie</label><input name="h3Client" type="text"></div><div class="field"><label>Datum / periode</label><input name="h3Date" type="text" placeholder="Datum of periode"></div><div class="field"><label>Team / betrokken disciplines</label><input name="h3Team" type="text" placeholder="Bijv. regie, camera, licht, geluid, productie"></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">S</span><div><h3>Situatie</h3></div></div><div class="fields">
+            <div class="field"><label>Beschrijf de opdracht, het team en de omstandigheden.</label><textarea name="h3Situation"></textarea></div><div class="field"><label>Welke samenwerking of afstemming was belangrijk?</label><textarea name="h3SituationNeed"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">T</span><div><h3>Taak</h3></div></div><div class="fields">
+            <div class="field"><label>Wat was jouw rol en welke werkzaamheden moest je afstemmen?</label><textarea name="h3TaskRole"></textarea></div><div class="field"><label>Welke afspraken of resultaten werden van jou verwacht?</label><textarea name="h3TaskExpected"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">A</span><div><h3>Actie — overleg en samenwerking</h3></div></div><div class="fields">
+            <div class="field"><label>Hoe overlegde je over keuzes en legde je uit waarom ze werden gemaakt?</label><textarea name="h3ActionChoices"></textarea></div><div class="field"><label>Hoe stemde je werk, timing en verantwoordelijkheden af?</label><textarea name="h3ActionCoordination"></textarea></div>
+            <div class="field"><label>Beschrijf een onverwachte of veranderde situatie en jouw reactie.</label><textarea name="h3ActionUnexpected"></textarea></div><div class="field"><label>Hoe hield je rekening met wensen en mogelijkheden van anderen?</label><textarea name="h3ActionOthers"></textarea></div>
+            <div class="field full"><label>Hoe heb je afspraken nagekomen en informatie op het juiste moment gedeeld?</label><textarea name="h3ActionAgreements"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">R</span><div><h3>Resultaat</h3></div></div><div class="fields">
+            <div class="field"><label>Wat was het effect van jouw manier van samenwerken op de productie?</label><textarea name="h3Result"></textarea></div><div class="field"><label>Welke feedback kreeg je op de samenwerking?</label><textarea name="h3FeedbackSummary"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">R</span><div><h3>Reflectie op feedback</h3></div></div><div class="fields">
+            <div class="field"><label>Wat zijn volgens de feedback jouw sterke punten?</label><textarea name="h3ReflectionStrengths"></textarea></div><div class="field"><label>Wat kan beter en welke actie onderneem je?</label><textarea name="h3ReflectionImprove"></textarea></div><div class="field full"><label>Wat moet je blijven doen, anders doen of juist niet meer doen?</label><textarea name="h3ReflectionPlan"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">+</span><div><h3>Feedbackgevers en bewijs</h3></div></div><div class="fields">
+            <div class="field"><label>Feedbackgever 1 — naam en professionele functie</label><input name="h3Reviewer1" type="text"></div><div class="field"><label>Feedbackgever 1 — datum</label><input name="h3ReviewDate1" type="date"></div>
+            <div class="field full"><label>Algemene samenvatting van feedbackgever 1</label><textarea name="h3Review1" class="compact"></textarea></div>
+            <div class="field"><label>Feedbackgever 2 — naam en professionele functie</label><input name="h3Reviewer2" type="text"></div><div class="field"><label>Feedbackgever 2 — datum</label><input name="h3ReviewDate2" type="date"></div>
+            <div class="field full"><label>Algemene samenvatting van feedbackgever 2</label><textarea name="h3Review2" class="compact"></textarea></div>
+          </div>
+          <details class="feedback-accordion"><summary>Feedbackformulier professional 1 — vragen uit de examenhandleiding</summary><div class="feedback-content"><div class="fields">
+            <div class="field full"><label>Professioneel samenwerken — beoordeling en voorbeeld <span class="hint">Noteer de beoordeling van de feedbackgever (onvoldoende, zwak, matig, voldoende of goed) en waar dat aan te zien was.</span></label><textarea name="h3F1Overall"></textarea></div>
+            <div class="field full"><label>1. Overlegde de student regelmatig en met gevoel voor timing? Waarom?</label><textarea name="h3F1Q1" class="compact"></textarea></div>
+            <div class="field full"><label>2. Hoe ging de student om met een onverwachte situatie? Geef een voorbeeld.</label><textarea name="h3F1Q2" class="compact"></textarea></div>
+            <div class="field full"><label>3. Hoe stemde de student werkzaamheden af met opdrachtgever/anderen? Geef een voorbeeld.</label><textarea name="h3F1Q3" class="compact"></textarea></div>
+            <div class="field full"><label>4. Wat doet de student goed in de samenwerking?</label><textarea name="h3F1Q4" class="compact"></textarea></div>
+            <div class="field full"><label>5. Wat kan beter?</label><textarea name="h3F1Q5" class="compact"></textarea></div>
+            <div class="field full"><label>6. Waar moet de student mee stoppen?</label><textarea name="h3F1Q6" class="compact"></textarea></div>
+            <div class="field full"><label>7. Waar moet de student absoluut mee doorgaan?</label><textarea name="h3F1Q7" class="compact"></textarea></div>
+          </div></div></details>
+          <details class="feedback-accordion"><summary>Feedbackformulier professional 2 — vragen uit de examenhandleiding</summary><div class="feedback-content"><div class="fields">
+            <div class="field full"><label>Professioneel samenwerken — beoordeling en voorbeeld <span class="hint">Noteer de beoordeling van de feedbackgever (onvoldoende, zwak, matig, voldoende of goed) en waar dat aan te zien was.</span></label><textarea name="h3F2Overall"></textarea></div>
+            <div class="field full"><label>1. Overlegde de student regelmatig en met gevoel voor timing? Waarom?</label><textarea name="h3F2Q1" class="compact"></textarea></div>
+            <div class="field full"><label>2. Hoe ging de student om met een onverwachte situatie? Geef een voorbeeld.</label><textarea name="h3F2Q2" class="compact"></textarea></div>
+            <div class="field full"><label>3. Hoe stemde de student werkzaamheden af met opdrachtgever/anderen? Geef een voorbeeld.</label><textarea name="h3F2Q3" class="compact"></textarea></div>
+            <div class="field full"><label>4. Wat doet de student goed in de samenwerking?</label><textarea name="h3F2Q4" class="compact"></textarea></div>
+            <div class="field full"><label>5. Wat kan beter?</label><textarea name="h3F2Q5" class="compact"></textarea></div>
+            <div class="field full"><label>6. Waar moet de student mee stoppen?</label><textarea name="h3F2Q6" class="compact"></textarea></div>
+            <div class="field full"><label>7. Waar moet de student absoluut mee doorgaan?</label><textarea name="h3F2Q7" class="compact"></textarea></div>
+          </div></div></details>
+          <div class="evidence-box" data-evidence-group="h3"><div class="evidence-heading"><strong>Bijlagen hoofdstuk 3</strong><button class="btn small add-evidence" type="button">+ Bewijs toevoegen</button></div><div class="evidence-list"></div><p class="note-small">Voeg beide ingevulde feedbackformulieren toe en registreer eventuele aanvullende bewijzen.</p></div></div>
+        </div>
+      </section>
+      <!-- chapter 4 -->
+      <section class="section" data-title="Hoofdstuk 4 — AV-portfolio" data-short="AV-portfolio">
+        <div class="section-head"><div class="head-meta"><span class="code-pill">B1-K2-W1</span><span class="soft-pill">Hoofdstuk 4</span><span class="soft-pill">Showreel</span></div><h2>Maakt een persoonlijk AV-portfolio</h2><p>Breng je talenten, drijfveren en ambities in kaart en toon deze met een actuele showreel die past bij het werkveld waarin je wilt opereren.</p></div>
+        <div class="section-body">
+          <div class="introbox">De examenhandleiding noemt een showreel van 1 tot 3 minuten. Controleer ook de technische exportinstellingen hieronder.</div>
+          <div class="group"><div class="group-head"><span class="group-step">01</span><div><h3>Profiel en werkveld</h3></div></div><div class="fields">
+            <div class="field full"><label>Op welk werkveld of welke doelgroep richt jij je? Waarom?</label><textarea name="h4Workfield" placeholder="Welke soort opdrachten wil je krijgen en wie moet jouw showreel overtuigen?"></textarea></div>
+            <div class="field"><label>Wat zijn jouw belangrijkste talenten en kwaliteiten?</label><textarea name="h4Talent"></textarea></div><div class="field"><label>Wat zijn jouw drijfveren, ambities en interesses binnen AV?</label><textarea name="h4Drivers"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">02</span><div><h3>Inhoud en keuzes van de showreel</h3></div></div><div class="fields">
+            <div class="field"><label>Welke producties/shots heb je geselecteerd? Vermeld project en jouw bijdrage.</label><textarea name="h4Selection" class="tall"></textarea></div><div class="field"><label>Waarom laten deze shots jouw kwaliteiten goed zien?</label><textarea name="h4SelectionReason"></textarea></div>
+            <div class="field"><label>Hoe toon je creativiteit en een eigen benadering van AV-vraagstukken?</label><textarea name="h4Creativity"></textarea></div><div class="field"><label>Hoe houd je rekening met ontwikkelingen in het werkveld of de markt?</label><textarea name="h4Market"></textarea></div>
+            <div class="field full"><label>Montage, ritme, audio en motion graphics <span class="hint">Beschrijf je keuzes en hoe ze de showreel ondersteunen.</span></label><textarea name="h4Edit"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">03</span><div><h3>Technische specificaties en controle</h3></div></div><div class="fields">
+            <div class="field"><label>Lengte van showreel</label><input name="h4Duration" type="text" placeholder="Bijv. 02:10"></div><div class="field"><label>Bestandsnaam / link naar showreel</label><input name="h4ShowreelFile" type="text" placeholder="Bestandsnaam of URL"></div>
+            <div class="field"><label>Resolutie</label><input name="h4Resolution" type="text" placeholder="Examenhandleiding: 1920 × 1080 px"></div><div class="field"><label>Formaat / codec</label><input name="h4Codec" type="text" placeholder="Examenhandleiding: MP4 H.264"></div>
+            <div class="field"><label>Framerate</label><input name="h4Fps" type="text" placeholder="Examenhandleiding: 25 fps"></div><div class="field"><label>Audio-instelling</label><input name="h4Audio" type="text" placeholder="Examenhandleiding: ongecomprimeerd 48.000 Hz"></div>
+            <div class="field full"><label>Hoe heb je de showreel gecontroleerd en hoe sluit hij aan op jouw gewenste werkveld?</label><textarea name="h4Quality"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">R</span><div><h3>Resultaat en reflectie</h3></div></div><div class="fields">
+            <div class="field"><label>Welke indruk en kwaliteiten brengt de uiteindelijke showreel over?</label><textarea name="h4Result"></textarea></div><div class="field"><label>Wat zou je bij een volgende versie verbeteren?</label><textarea name="h4Reflection"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">+</span><div><h3>Bewijsstukken</h3></div></div><div class="evidence-box" data-evidence-group="h4"><div class="evidence-heading"><strong>Bijlagen hoofdstuk 4</strong><button class="btn small add-evidence" type="button">+ Bewijs toevoegen</button></div><div class="evidence-list"></div><p class="note-small">Voeg de showreel als apart bestand toe. Controleer de technische exportvereisten.</p></div></div>
+        </div>
+      </section>
+      <!-- chapter 5 -->
+      <section class="section" data-title="Hoofdstuk 5 — AV-netwerk" data-short="AV-netwerk">
+        <div class="section-head"><div class="head-meta"><span class="code-pill">B1-K2-W2</span><span class="soft-pill">Hoofdstuk 5</span><span class="soft-pill">Netwerken</span></div><h2>Participeert in het relevante AV-netwerk</h2><p>Laat zien hoe je relevante contacten opbouwt en onderhoudt, ontwikkelingen in het vakgebied volgt en met anderen meedenkt over AV-vraagstukken.</p></div>
+        <div class="section-body">
+          <div class="introbox">De handleiding vraagt onder meer om een verslag van een beursbezoek, een diagram van je sociale en professionele netwerk, een beschrijving van kwaliteiten en zwakke punten en een reflectie op je netwerkontwikkeling.</div>
+          <div class="group"><div class="group-head"><span class="group-step">01</span><div><h3>Context en doelen</h3></div></div><div class="fields">
+            <div class="field"><label>Wat voor AV-werk wil je doen en welke contacten zijn daarvoor relevant?</label><textarea name="h5Goals"></textarea></div><div class="field"><label>Wat wil je met je netwerk bereiken?</label><textarea name="h5NetworkGoal"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">02</span><div><h3>Beursbezoek, innovatie en trends</h3></div></div><div class="fields">
+            <div class="field"><label>Naam, datum en doel van het beursbezoek / evenement</label><textarea name="h5FairInfo" class="compact"></textarea></div><div class="field"><label>Welke innovaties en trends heb je gezien? Waarom zijn ze relevant?</label><textarea name="h5Trends"></textarea></div>
+            <div class="field"><label>Welke interessante mensen heb je ontmoet en wat heb je besproken?</label><textarea name="h5PeopleMet"></textarea></div><div class="field"><label>Wat heb je geleerd en hoe ga je die inzichten gebruiken?</label><textarea name="h5FairLearning"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">03</span><div><h3>Mijn netwerk</h3></div></div><div class="fields">
+            <div class="field full"><label>Beschrijf je sociale en professionele netwerk <span class="hint">Voeg een diagram als apart bestand toe en beschrijf hier de onderdelen en relaties.</span></label><textarea name="h5NetworkDiagram" class="tall" placeholder="Bijv. school, stagebedrijf, collega's, opdrachtgevers, makers, online communities en branchecontacten."></textarea></div>
+            <div class="field"><label>Wat zijn jouw netwerkkwaliteiten?</label><textarea name="h5Strengths"></textarea></div><div class="field"><label>Welke zwakke punten of drempels heb je?</label><textarea name="h5Weaknesses"></textarea></div>
+            <div class="field"><label>Hoe leg je actief nieuwe contacten en onderhoud je bestaande relaties?</label><textarea name="h5ContactMethods"></textarea></div><div class="field"><label>Hoe vraag je naar ervaringen/ideeën en help je anderen met hun vraagstukken?</label><textarea name="h5HelpOthers"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">R</span><div><h3>Resultaat en reflectie</h3></div></div><div class="fields">
+            <div class="field"><label>Welke concrete contacten, ideeën of mogelijkheden zijn ontstaan?</label><textarea name="h5Results"></textarea></div><div class="field"><label>Welke acties ga je ondernemen om zwakke punten te verbeteren en je netwerk uit te breiden?</label><textarea name="h5Plan"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">+</span><div><h3>Bewijsstukken</h3></div></div><div class="evidence-box" data-evidence-group="h5"><div class="evidence-heading"><strong>Bijlagen hoofdstuk 5</strong><button class="btn small add-evidence" type="button">+ Bewijs toevoegen</button></div><div class="evidence-list"></div><p class="note-small">Voeg beursverslag, netwerkdiagram en eventueel bewijs van relevante contactmomenten toe.</p></div></div>
+        </div>
+      </section>
+      <!-- chapter 6 -->
+      <section class="section" data-title="Hoofdstuk 6 — Doelgroep & strategie" data-short="Doelgroep">
+        <div class="section-head"><div class="head-meta"><span class="code-pill">P4-K1-W1</span><span class="soft-pill">Hoofdstuk 6</span><span class="soft-pill">Briefing & onderzoek</span></div><h2>Bepaalt doelgroep, doel en strategie van de AV-productie</h2><p>Laat zien hoe je een briefing verduidelijkt, relevante informatie onderzoekt, haalbaarheid beoordeelt en de opdracht vertaalt naar een heldere debriefing.</p></div>
+        <div class="section-body">
+          <div class="introbox">De kernbewijzen uit de handleiding zijn: eisen en wensen van de opdrachtgever (briefing), onderzoek naar doel en doelgroep, haalbaarheid van het plan van aanpak en heldere aanleverafspraken in de debriefing.</div>
+          <div class="group"><div class="group-head"><span class="group-step">01</span><div><h3>Projectgegevens en briefing</h3></div></div><div class="fields">
+            <div class="field"><label>Project / opdrachtgever</label><input name="h6Project" type="text"></div><div class="field"><label>Datum briefing</label><input name="h6Date" type="date"></div>
+            <div class="field full"><label>Wat was de oorspronkelijke briefing? Beschrijf opdracht, wensen en eisen.</label><textarea name="h6Brief" class="tall"></textarea></div>
+            <div class="field full"><label>Welke informatie ontbrak of was nog onduidelijk? Welke vragen stelde je?</label><textarea name="h6Questions"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">S</span><div><h3>Situatie en doel</h3></div></div><div class="fields">
+            <div class="field"><label>Wat moet de AV-productie bereiken?</label><textarea name="h6Objective"></textarea></div><div class="field"><label>Wie is de doelgroep? Beschrijf relevante kenmerken, behoeften en kijkgedrag.</label><textarea name="h6Audience"></textarea></div>
+            <div class="field full"><label>Welke boodschap moet de doelgroep onthouden of welke actie moet volgen?</label><textarea name="h6Message"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">T</span><div><h3>Taak</h3></div></div><div class="fields">
+            <div class="field"><label>Wat moest jij onderzoeken en bepalen?</label><textarea name="h6Task"></textarea></div><div class="field"><label>Wat was jouw rol in overleg met opdrachtgever/team?</label><textarea name="h6Role"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">A</span><div><h3>Actie — onderzoek en strategie</h3></div></div><div class="fields">
+            <div class="field full"><label>Onderzoek naar doel en doelgroep <span class="hint">Welke bronnen/methoden gebruikte je en wat kwam eruit? Noteer waar je bevindingen vandaan komen.</span></label><textarea name="h6Research" class="tall"></textarea></div>
+            <div class="field"><label>Welke AV-vorm en platform(s) passen bij doel en doelgroep? Waarom?</label><textarea name="h6FormatPlatform"></textarea></div><div class="field"><label>Welke inhoudelijke en technische productie-eisen volgen hieruit?</label><textarea name="h6Requirements"></textarea></div>
+            <div class="field full"><label>Haalbaarheid van het plan van aanpak <span class="hint">Bespreek waar van toepassing tijd, budget, mensen, apparatuur, locatie, toestemming, planning en risico’s.</span></label><textarea name="h6Feasibility" class="tall"></textarea></div>
+            <div class="field full"><label>Debriefing voor de opdrachtgever <span class="hint">Vat opdracht, doel, doelgroep, aanpak, haalbaarheid, planning, aanlevering en gemaakte afspraken samen in heldere taal.</span></label><textarea name="h6Debriefing" class="tall"></textarea></div>
+            <div class="field full"><label>Hoe heb je de debriefing en aanleverafspraken besproken/bevestigd?</label><textarea name="h6Agreement"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">R</span><div><h3>Resultaat en reflectie</h3></div></div><div class="fields">
+            <div class="field"><label>Hoe paste het onderzoek en de debriefing bij de opdracht?</label><textarea name="h6Result"></textarea></div><div class="field"><label>Wat zou je een volgende keer anders uitvragen of onderzoeken?</label><textarea name="h6Reflection"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">+</span><div><h3>Bewijsstukken</h3></div></div><div class="evidence-box" data-evidence-group="h6"><div class="evidence-heading"><strong>Bijlagen hoofdstuk 6</strong><button class="btn small add-evidence" type="button">+ Bewijs toevoegen</button></div><div class="evidence-list"></div><p class="note-small">Voeg briefing, onderzoeksresultaten/bronnen, haalbaarheidsanalyse, debriefing en relevante communicatie toe.</p></div></div>
+        </div>
+      </section>
+      <!-- chapter 7 -->
+      <section class="section" data-title="Hoofdstuk 7 — AV-concept" data-short="AV-concept">
+        <div class="section-head"><div class="head-meta"><span class="code-pill">P4-K1-W2</span><span class="soft-pill">Hoofdstuk 7</span><span class="soft-pill">Conceptontwikkeling</span></div><h2>Maakt het AV-(deel)concept of levert input</h2><p>Laat zien hoe je de opdracht creatief vertaalt naar een concept dat in tekst, beeld en geluid te previsualiseren en binnen de kaders te realiseren is.</p></div>
+        <div class="section-body">
+          <div class="introbox">De handleiding vraagt om een conceptbeschrijving, synopsis, moodboard (look & feel, kleur en licht), onderbouwing van cinematografische keuzes, audiovoorstellen met voorbeelden en feedback van een professional die je verwerkt.</div>
+          <div class="group"><div class="group-head"><span class="group-step">01</span><div><h3>Projectgegevens en uitgangspunt</h3></div></div><div class="fields">
+            <div class="field"><label>Project / opdrachtgever</label><input name="h7Project" type="text"></div><div class="field"><label>Datum / versie concept</label><input name="h7Date" type="text" placeholder="Datum of versienummer"></div>
+            <div class="field full"><label>Briefing/debriefing als uitgangspunt <span class="hint">Wat moest het concept oplossen en welke eisen/grenzen stonden vast?</span></label><textarea name="h7Brief"></textarea></div>
+            <div class="field full"><label>Jouw rol en eigen inbreng</label><textarea name="h7Role"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">02</span><div><h3>Concept, verhaal en synopsis</h3></div></div><div class="fields">
+            <div class="field full"><label>Beschrijving van het idee/concept <span class="hint">Wat is het centrale idee, de boodschap en de creatieve invalshoek? Waarom past het bij opdrachtgever en doelgroep?</span></label><textarea name="h7Concept" class="tall"></textarea></div>
+            <div class="field full"><label>Synopsis <span class="hint">Beschrijf compact wat er in de productie gebeurt, hoe het verhaal verloopt en hoe het eindigt.</span></label><textarea name="h7Synopsis" class="tall"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">03</span><div><h3>Moodboard en cinematografie</h3></div></div><div class="fields">
+            <div class="field full"><label>Moodboard / look & feel <span class="hint">Beschrijf of verwijs naar het bijgevoegde moodboard: sfeer, referentiebeelden, kleur, licht en visuele stijl.</span></label><textarea name="h7Moodboard" class="tall"></textarea></div>
+            <div class="field"><label>Kleur, licht en belichting</label><textarea name="h7Lighting"></textarea></div><div class="field"><label>Cameravoering en compositie</label><textarea name="h7Camera"></textarea></div>
+            <div class="field"><label>Lens, beweging, kadrering en focus</label><textarea name="h7Cinematography"></textarea></div><div class="field"><label>Locatie, art direction, kleding/props en omstandigheden</label><textarea name="h7LocationArt"></textarea></div>
+            <div class="field full"><label>Waarom passen deze cinematografische keuzes bij verhaal, doelgroep en productie-eisen?</label><textarea name="h7VisualReason"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">04</span><div><h3>Audio en technische uitvoerbaarheid</h3></div></div><div class="fields">
+            <div class="field"><label>Audiovoorstellen <span class="hint">Muziek, voice-over, dialoog, omgevingsgeluid, sound design en referentievoorbeelden.</span></label><textarea name="h7Audio" class="tall"></textarea></div><div class="field"><label>Welke technische middelen en mensen zijn nodig?</label><textarea name="h7Resources"></textarea></div>
+            <div class="field"><label>Welk alternatief plan heb je voor onvoorziene omstandigheden?</label><textarea name="h7PlanB"></textarea></div><div class="field"><label>Hoe blijft het concept haalbaar binnen tijd, budget, locatie en middelen?</label><textarea name="h7Feasibility"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">05</span><div><h3>Feedback van een professional</h3></div></div><div class="fields">
+            <div class="field"><label>Wie heeft het plan beoordeeld? Noteer functie en datum.</label><input name="h7FeedbackPerson" type="text"></div><div class="field"><label>Hoe heb je het concept gepresenteerd?</label><textarea name="h7Presentation"></textarea></div>
+            <div class="field"><label>Welke feedback heb je ontvangen?</label><textarea name="h7Feedback"></textarea></div><div class="field"><label>Wat heb je aangepast en waarom verbeterde dit het concept?</label><textarea name="h7FeedbackChanges"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">R</span><div><h3>Resultaat en reflectie</h3></div></div><div class="fields">
+            <div class="field"><label>Beschrijf het uiteindelijke concept en waarom het aan de opdracht voldoet.</label><textarea name="h7Result"></textarea></div><div class="field"><label>Welke keuzes zou je behouden of aanpassen bij een volgende conceptontwikkeling?</label><textarea name="h7Reflection"></textarea></div>
+          </div></div>
+          <div class="group"><div class="group-head"><span class="group-step">+</span><div><h3>Bewijsstukken</h3></div></div><div class="evidence-box" data-evidence-group="h7"><div class="evidence-heading"><strong>Bijlagen hoofdstuk 7</strong><button class="btn small add-evidence" type="button">+ Bewijs toevoegen</button></div><div class="evidence-list"></div><p class="note-small">Voeg conceptdocument, synopsis, moodboard, audiovoorbeelden, presentatie en feedback toe.</p></div></div>
+        </div>
+      </section>
+      <!-- evidence overview -->
+      <section class="section" data-title="Bewijs & controle" data-short="Bewijs">
+        <div class="section-head"><div class="head-meta"><span class="code-pill">CONTROLE</span><span class="soft-pill">Compleetheid</span></div><h2>Bewijsstukken en portfolio-check</h2><p>Controleer of alle hoofdstukken voldoende concreet zijn onderbouwd en of je bijlagen duidelijk zijn benoemd. Bewijsstukken mogen niet alleen worden genoemd; je moet ze ook afzonderlijk aanleveren.</p></div>
+        <div class="section-body">
+          <div class="check-summary"><div class="summary-chip"><strong id="chaptersStarted">0 / 7</strong><span>Hoofdstukken met ingevulde inhoud</span></div><div class="summary-chip"><strong id="evidenceCount">0</strong><span>Geregistreerde bewijsstukken</span></div><div class="summary-chip"><strong id="checksCount">0</strong><span>Afgevinkte controles</span></div></div>
+          <div class="group"><div class="group-head"><span class="group-step">01</span><div><h3>Algemene controle</h3><p class="group-description">Vink af wanneer je dit hebt gecontroleerd. Het is geen automatische examengoedkeuring.</p></div></div>
+            <div class="checklist">
+              <label class="checkitem"><input type="checkbox" name="final_all7">Alle zeven werkprocessen zijn uitgewerkt.</label>
+              <label class="checkitem"><input type="checkbox" name="final_fourProjects">De bewijzen zijn afkomstig uit minimaal vier verschillende opdrachten/projecten.</label>
+              <label class="checkitem"><input type="checkbox" name="final_relevant">De bewijsstukken zijn relevant voor de criteria van het betreffende werkproces.</label>
+              <label class="checkitem"><input type="checkbox" name="final_authentic">De bewijsstukken zijn authentiek en mijn eigen bijdrage is duidelijk.</label>
+              <label class="checkitem"><input type="checkbox" name="final_age">Ik heb gecontroleerd dat de bewijzen voldoen aan de ouderdomseis uit de examenhandleiding.</label>
+              <label class="checkitem"><input type="checkbox" name="final_twoEvidence">Ik heb de gevraagde hoeveelheid bewijsstukken per werkproces toegevoegd.</label>
+              <label class="checkitem"><input type="checkbox" name="final_images">Waar mogelijk ondersteunen beeldmateriaal en voorbeelden mijn verhaal.</label>
+              <label class="checkitem"><input type="checkbox" name="final_vab">Voor stagebewijzen regel ik de benodigde VAB-verklaring.</label>
+              <label class="checkitem"><input type="checkbox" name="final_cgi">Mijn portfolio helpt mij bij de presentatie en het CGI.</label>
+              <label class="checkitem"><input type="checkbox" name="final_fileNames">Alle bijlagen hebben duidelijke bestandsnamen en zijn vermeld in de export.</label>
+            </div>
+          </div>
+          <div class="group"><div class="group-head"><span class="group-step">02</span><div><h3>Openstaande taken</h3><p class="group-description">Zet hier wat je nog moet opzoeken, schrijven, aanvragen of uploaden.</p></div></div>
+            <div class="field"><label>Openstaande informatie, ontbrekende bewijsstukken en afspraken met docent</label><textarea name="openTasks" class="tall" placeholder="Bijv. tweede feedbackformulier aanvragen; plattegrond van locatie exporteren; rechten van track controleren."></textarea></div>
+          </div>
+          <div class="callout warning"><strong>Examencontrole:</strong> gebruik dit overzicht als hulpmiddel. Het vervangt de officiële beoordelingsformulieren of eventuele aanvullende aanwijzingen van je docent niet. Bewijs uit minimaal vier verschillende opdrachten en authenticiteit zijn expliciete eisen in de handleiding.</div>
+        </div>
+      </section>
+      <!-- export -->
+      <section class="section" data-title="Exporteren" data-short="Export">
+        <div class="section-head"><div class="head-meta"><span class="code-pill">EXPORT</span><span class="soft-pill">Aanleveren bij ChatGPT</span></div><h2>Exporteer je volledige portfolio</h2><p>Download je antwoorden in één bestand en upload dat bestand hier. Ik kan de inhoud vervolgens controleren en omzetten naar een samenhangend Word-document.</p></div>
+        <div class="section-body">
+          <div class="callout"><strong>Wat wordt geëxporteerd?</strong> Alle ingevulde tekstvelden, checklists en de registraties van bewijsstukken per hoofdstuk. Het exportbestand bevat geen daadwerkelijke foto's, video's of andere bijlagen; voeg die afzonderlijk toe.</div>
+          <div class="export-grid">
+            <div class="export-card"><h3>JSON — aanbevolen</h3><p>Volledige gegevensstructuur, geschikt om door ChatGPT te laten verwerken en later opnieuw in de app te importeren.</p><button class="btn primary export-json" type="button">↓ Download JSON</button></div>
+            <div class="export-card"><h3>Leesbaar tekstbestand</h3><p>Een eenvoudige tekstversie van je ingevulde velden en bewijsstukken, handig om zelf na te lezen.</p><button class="btn export-text" type="button">↓ Download TXT</button></div>
+            <div class="export-card"><h3>Print of PDF</h3><p>Opent de printfunctie van je browser. Kies daar eventueel “Opslaan als PDF”.</p><button class="btn print-pdf" type="button">Printen / opslaan als PDF</button></div>
+            <div class="export-card"><h3>Importeer back-up</h3><p>Laad eerder opgeslagen antwoorden terug. Dit vervangt de huidige inhoud van velden waar gegevens in het bestand staan.</p><div class="file-input"><input id="importFile" type="file" accept=".json,application/json"><p class="note-small">Kies een JSON-export die eerder uit deze app is gemaakt.</p></div></div>
+          </div>
+          <div class="group" style="margin-top:25px"><div class="group-head"><span class="group-step">✓</span><div><h3>Volgende stap</h3><p class="group-description">Zo maak je van je invulwerk één portfolio.</p></div></div><ol style="padding-left:22px;font-size:13px;line-height:1.8"><li>Download de JSON-export.</li><li>Upload het bestand in de ChatGPT-chat waarin we aan je portfolio werken.</li><li>Upload ook de daadwerkelijke bewijsstukken waarnaar je verwijst.</li><li>Vraag om een volledigheidscontrole voordat je de definitieve Word-versie laat maken.</li></ol></div>
+          <div class="inline-actions no-print"><button class="btn danger" id="clearAll" type="button">Alle gegevens uit deze browser wissen</button></div>
+          <p class="note-small">Privacy: deze webapp verstuurt de ingevulde gegevens niet automatisch. Automatische opslag staat lokaal in deze browser. Maak regelmatig een exportback-up.</p>
+        </div>
+      </section>
+      </div>
+      <div class="actions no-print">
+        <button class="btn" id="prevBtn" type="button">← Vorige</button>
+        <div class="actions-center"><span class="page-indicator" id="pageIndicator">Onderdeel 1 van 10</span><button class="btn small" id="saveButton" type="button">✓ Nu opslaan</button></div>
+        <button class="btn primary" id="nextBtn" type="button">Volgende →</button>
+      </div>
+      </form>
+    </main>
+  </div>
+  <footer class="app-footer">AV Portfolio Werkruimte · Lokaal invulhulpmiddel · Exporteer regelmatig een back-up</footer>
+</div>
+<div class="toast" id="toast">Opgeslagen</div>
+<script>
+(()=> {
+ const form=document.getElementById('portfolioForm');
+ const sections=[...document.querySelectorAll('.section')];
+ const navButtons=[...document.querySelectorAll('.nav button')];
+ const STORAGE_KEY='av_portfolio_workspace_v3';
+ let current=0, saveTimer, toastTimer, isLoading=false;
+
+ const chapterMeta=[
+  {id:'h1',page:1,title:'Hoofdstuk 1 — Voorbereiden',prefix:'h1'},
+  {id:'h2',page:2,title:'Hoofdstuk 2 — Opleveren',prefix:'h2'},
+  {id:'h3',page:3,title:'Hoofdstuk 3 — Samenwerken',prefix:'h3'},
+  {id:'h4',page:4,title:'Hoofdstuk 4 — AV-portfolio',prefix:'h4'},
+  {id:'h5',page:5,title:'Hoofdstuk 5 — AV-netwerk',prefix:'h5'},
+  {id:'h6',page:6,title:'Hoofdstuk 6 — Doelgroep & strategie',prefix:'h6'},
+  {id:'h7',page:7,title:'Hoofdstuk 7 — AV-concept',prefix:'h7'}
+ ];
+
+ function toast(message){
+  const t=document.getElementById('toast');t.textContent=message;t.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),1900);
+ }
+ function chapterEvidence(){
+  const result={};
+  document.querySelectorAll('[data-evidence-group]').forEach(box=>{
+   const group=box.dataset.evidenceGroup;
+   result[group]=[...box.querySelectorAll('.evidence-row')].map(row=>({
+    name:row.querySelector('[data-key="name"]').value.trim(),
+    file:row.querySelector('[data-key="file"]').value.trim(),
+    demonstrates:row.querySelector('[data-key="proof"]').value.trim()
+   })).filter(v=>v.name||v.file||v.demonstrates);
+  });
+  return result;
+ }
+ function getData(){
+  const fields={};
+  [...form.elements].forEach(el=>{
+   if(!el.name || el.type==='file' || el.type==='button' || el.type==='submit')return;
+   fields[el.name]=el.type==='checkbox'?el.checked:el.value;
+  });
+  return {schema:'av-portfolio-werkruimte-v3',title:'AV Specialist — volledig portfolio',createdBy:'AV Portfolio Werkruimte',exportedAt:new Date().toISOString(),student:{name:fields.studentName||'',number:fields.studentNumber||'',school:fields.school||'',classGroup:fields.classGroup||''},fields,evidence:chapterEvidence()};
+ }
+ function safeName(value){
+  return (value||'av-specialist-portfolio').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60)||'av-specialist-portfolio';
+ }
+ function save(silent=true){
+  if(isLoading)return;
+  try{
+   localStorage.setItem(STORAGE_KEY,JSON.stringify(getData()));
+   document.getElementById('saveStatus').textContent='Opgeslagen '+new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'});
+   if(!silent)toast('Voortgang opgeslagen in deze browser');
+  }catch(e){
+   document.getElementById('saveStatus').textContent='Opslaan niet mogelijk';
+   if(!silent)toast('Opslaan mislukt; download een export als back-up');
+  }
+  refreshProgress();
+ }
+ function scheduleSave(){if(isLoading)return;document.getElementById('saveStatus').textContent='Wijzigingen…';clearTimeout(saveTimer);saveTimer=setTimeout(()=>save(true),350)}
+ function addEvidenceRow(box, item={}){
+  const list=box.querySelector('.evidence-list');
+  const row=document.createElement('div');row.className='evidence-row';
+  row.innerHTML='<input type="text" data-key="name" aria-label="Naam bewijsstuk" placeholder="Naam/type bewijsstuk"><input type="text" data-key="file" aria-label="Bestandsnaam" placeholder="Bestandsnaam of link"><textarea class="proof compact" data-key="proof" aria-label="Wat bewijst dit?" placeholder="Wat toont dit bewijs aan en wat was jouw eigen bijdrage?"></textarea><button type="button" title="Verwijder bewijsstuk" aria-label="Verwijder bewijsstuk">×</button>';
+  row.querySelector('[data-key="name"]').value=item.name||'';
+  row.querySelector('[data-key="file"]').value=item.file||'';
+  row.querySelector('[data-key="proof"]').value=item.demonstrates||item.proof||'';
+  row.querySelectorAll('input,textarea').forEach(el=>el.addEventListener('input',scheduleSave));
+  row.querySelector('button').addEventListener('click',()=>{row.remove();scheduleSave()});
+  list.appendChild(row);
+ }
+ document.querySelectorAll('[data-evidence-group]').forEach(box=>{
+  box.querySelector('.add-evidence').addEventListener('click',()=>{addEvidenceRow(box);scheduleSave()});
+  addEvidenceRow(box);
+ });
+
+ function fillData(data){
+  if(!data||!data.fields)throw new Error('Dit bestand lijkt geen geldige export uit de AV Portfolio Werkruimte.');
+  isLoading=true;
+  for(const [name,value] of Object.entries(data.fields)){
+   const el=form.elements.namedItem(name);if(!el)continue;
+   if(el.type==='checkbox')el.checked=!!value;
+   else if(el.type!=='file')el.value=value??'';
+  }
+  // If an older export has evidence at fields.evidence, support it too.
+  const ev=data.evidence||{};
+  document.querySelectorAll('[data-evidence-group]').forEach(box=>{
+   const key=box.dataset.evidenceGroup;const list=box.querySelector('.evidence-list');
+   list.innerHTML='';
+   const rows=Array.isArray(ev[key])?ev[key]:[];
+   rows.forEach(item=>addEvidenceRow(box,item));
+   if(!rows.length)addEvidenceRow(box);
+  });
+  isLoading=false;save(true);refreshProgress();
+ }
+ function showPage(index){
+  current=Math.max(0,Math.min(sections.length-1,index));
+  sections.forEach((sec,i)=>sec.classList.toggle('active',i===current));
+  navButtons.forEach((btn,i)=>btn.classList.toggle('active',i===current));
+  document.getElementById('prevBtn').disabled=current===0;
+  document.getElementById('nextBtn').disabled=current===sections.length-1;
+  document.getElementById('pageIndicator').textContent=`Onderdeel ${current+1} van ${sections.length}`;
+  if(current>0&&current<8){
+   const section=sections[current];
+   const first=section.querySelector('input,textarea,select');
+   // Do not steal focus; just update view.
+  }
+  if(window.matchMedia('(max-width:760px)').matches)document.querySelector('.sidebar').scrollIntoView({behavior:'smooth',block:'start'});
+  else window.scrollTo({top:0,behavior:'smooth'});
+  refreshProgress();
+ }
+ function sectionFields(sec){
+  return [...sec.querySelectorAll('input:not([type=file]):not([type=button]):not([type=submit]),textarea,select')].filter(el=>!el.closest('[data-evidence-group]'));
+ }
+ function sectionProgress(sec){
+  const els=sectionFields(sec);if(!els.length)return 0;
+  let completed=0;
+  els.forEach(el=>{if(el.type==='checkbox'){if(el.checked)completed++;}else if((el.value||'').trim())completed++;});
+  return Math.round(completed/els.length*100);
+ }
+ function refreshProgress(){
+  const relevant=sections.slice(1,8);
+  const totalFields=relevant.flatMap(sectionFields);
+  let done=0;totalFields.forEach(el=>{if(el.type==='checkbox'){if(el.checked)done++;}else if((el.value||'').trim())done++;});
+  const pct=totalFields.length?Math.round(done/totalFields.length*100):0;
+  document.getElementById('globalPct').textContent=pct+'%';
+  document.getElementById('globalBar').style.width=pct+'%';
+  document.getElementById('globalDetails').textContent=`${done} van ${totalFields.length} velden ingevuld`;
+  navButtons.forEach((btn,i)=>{
+   if(i>=1&&i<=7){const percent=sectionProgress(sections[i]);const status=btn.querySelector('.nav-status');status.textContent=percent===100?'✓':percent>0?percent+'%':'○';status.classList.toggle('done',percent===100);}
+   if(i===8){const check=sections[8].querySelectorAll('input[type=checkbox]:checked').length;btn.querySelector('.nav-status').textContent=check?check+'✓':'○';}
+  });
+  const started=chapterMeta.filter(m=>sectionFields(sections[m.page]).some(el=>el.type==='checkbox'?el.checked:(el.value||'').trim())).length;
+  document.getElementById('chaptersStarted').textContent=`${started} / 7`;
+  const evid=Object.values(chapterEvidence()).reduce((sum,rows)=>sum+rows.length,0);
+  document.getElementById('evidenceCount').textContent=evid;
+  const allChecks=[...form.querySelectorAll('input[type=checkbox]:checked')].length;
+  document.getElementById('checksCount').textContent=allChecks;
+ }
+ navButtons.forEach(btn=>btn.addEventListener('click',()=>showPage(Number(btn.dataset.page))));
+ document.getElementById('prevBtn').addEventListener('click',()=>showPage(current-1));
+ document.getElementById('nextBtn').addEventListener('click',()=>showPage(current+1));
+ form.addEventListener('input',scheduleSave);
+ form.addEventListener('change',scheduleSave);
+ document.getElementById('saveButton').addEventListener('click',()=>save(false));
+ function download(filename,content,mime){
+  const blob=new Blob([content],{type:mime});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200);
+ }
+ function exportJson(){
+  save(true);const d=getData();download(safeName(d.student.name||'av-specialist')+'-portfolio-alle-werkprocessen.json',JSON.stringify(d,null,2),'application/json;charset=utf-8');toast('Volledige portfolio-export gedownload');
+ }
+ function exportText(){
+  save(true);const data=getData();let out=`AV SPECIALIST — VOLLEDIG PORTFOLIO\nGeëxporteerd: ${data.exportedAt}\nStudent: ${data.student.name||'Niet ingevuld'}\nSchool: ${data.student.school||'Niet ingevuld'}\nOpleiding/klas: ${data.student.classGroup||'Niet ingevuld'}\n\n`;
+  const excluded=new Set(['studentName','studentNumber','school','classGroup']);
+  out+=`ALGEMENE GEGEVENS\nBedrijf: ${data.fields.internshipCompany||''}\nPortfolio-richting: ${data.fields.portfolioGoal||''}\nAlgemene notities: ${data.fields.portfolioNotes||''}\n`;
+  sections.forEach(sec=>{
+   if(sec.dataset.short==='Export')return;
+   out+=`\n\n${sec.dataset.title.toUpperCase()}\n${'='.repeat(Math.min(65,sec.dataset.title.length+4))}\n`;
+   const fields=sectionFields(sec);
+   fields.forEach(el=>{
+    if(el.type==='checkbox'){out+=`${el.checked?'[x]':'[ ]'} ${el.closest('label')?.innerText.trim()||el.name}\n`;return;}
+    const val=(el.value||'').trim();if(!val)return;
+    const label=el.closest('.field')?.querySelector('label')?.innerText.replace(/\s+/g,' ').trim()||el.name;
+    out+=`\n${label}\n${val}\n`;
+   });
+   const evidenceBox=sec.querySelector('[data-evidence-group]');
+   if(evidenceBox){
+    const key=evidenceBox.dataset.evidenceGroup;
+    const rows=data.evidence[key]||[];
+    if(rows.length){out+='\nBEWIJSSTUKKEN\n';rows.forEach((e,i)=>{out+=`${i+1}. ${e.name}\n   Bestandsnaam/link: ${e.file}\n   Wat het aantoont/eigen bijdrage: ${e.demonstrates}\n`;});}
+   }
+  });
+  out+='\n\nEXPORTINSTRUCTIE\nUpload dit tekstbestand of de JSON-export en de daadwerkelijke bewijsstukken in ChatGPT voor controle en samenvoeging.\n';
+  download(safeName(data.student.name||'av-specialist')+'-portfolio-alle-werkprocessen.txt',out,'text/plain;charset=utf-8');toast('Leesbaar tekstbestand gedownload');
+ }
+ document.querySelectorAll('.export-json').forEach(btn=>btn.addEventListener('click',exportJson));
+ document.querySelectorAll('.export-text').forEach(btn=>btn.addEventListener('click',exportText));
+ document.querySelectorAll('.print-pdf').forEach(btn=>btn.addEventListener('click',()=>window.print()));
+ document.getElementById('quickSave').addEventListener('click',exportJson);
+ document.getElementById('importFile').addEventListener('change',async e=>{
+  const file=e.target.files?.[0];if(!file)return;
+  try{const parsed=JSON.parse(await file.text());if(confirm('Een import kan ingevulde velden vervangen. Heb je een back-up van de huidige gegevens als je die wilt bewaren?')){fillData(parsed);toast('Exportbestand geladen');}}
+  catch(err){alert('Importeren is niet gelukt: '+err.message);}
+  finally{e.target.value='';}
+ });
+ document.getElementById('clearAll').addEventListener('click',()=>{
+  if(!confirm('Weet je zeker dat je alle ingevulde gegevens uit deze browser wilt wissen? Download eerst een export als je ze wilt bewaren.'))return;
+  isLoading=true;form.reset();document.querySelectorAll('[data-evidence-group]').forEach(box=>{box.querySelector('.evidence-list').innerHTML='';addEvidenceRow(box);});isLoading=false;
+  localStorage.removeItem(STORAGE_KEY);save(true);showPage(0);toast('Gegevens gewist');
+ });
+ // Load saved browser state, otherwise begin with one empty evidence row in each chapter.
+ try{
+  const saved=localStorage.getItem(STORAGE_KEY);
+  if(saved)fillData(JSON.parse(saved));
+  else {save(true);}
+ }catch(err){console.warn(err);save(true);}
+ showPage(0);refreshProgress();
+})();
+</script>
+</body>
+</html>
